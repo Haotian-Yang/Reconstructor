@@ -1,5 +1,0 @@
-/home/xiran_zhang/dev/ARssistX/datasetReconstructor/build/CMakeFiles/rebuild_cache.dir
-/home/xiran_zhang/dev/ARssistX/datasetReconstructor/build/CMakeFiles/edit_cache.dir
-/home/xiran_zhang/dev/ARssistX/datasetReconstructor/build/src/CMakeFiles/rebuild_cache.dir
-/home/xiran_zhang/dev/ARssistX/datasetReconstructor/build/src/CMakeFiles/Reconstructor.dir
-/home/xiran_zhang/dev/ARssistX/datasetReconstructor/build/src/CMakeFiles/edit_cache.dir
