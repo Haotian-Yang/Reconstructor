@@ -24,8 +24,8 @@ Mat dataloader::imgLoader(const string &filepath){
 
     // Output properties
     cout << "-- Image has been loaded --\n" << endl;
-    cout << "Image type:" << img.type() << "\n" << endl;
-    cout << "Image size:" << img.size << "\n" << endl;
+    cout << "Image type: " << img.type() << "\n" << endl;
+    cout << "Image size: " << img.size << "\n" << endl;
 
     return img;
 }
