@@ -7,7 +7,7 @@
 #include <opencv2/imgcodecs.hpp>
 
 class dataloader{
-private :
+public:
     cv::Mat depth;
     cv::Mat img;
     std::string depthPath;
