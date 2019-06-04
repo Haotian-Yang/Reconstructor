@@ -20,6 +20,7 @@ public:
         img = imgLoader (imgFile);
     }
 
+private:
     cv::Mat depthLoader(const std::string& filepath);
     cv::Mat imgLoader(const std::string& filepath);
 };

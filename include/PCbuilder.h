@@ -21,7 +21,7 @@ public:
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr buildPointCloud(const cv::Mat &image,  const cv::Mat &depth);
     void savePCDfile(const std::string& savePath);
-    std::string getSavePath();
+    std::string getSavePath() const;
 
 };
 

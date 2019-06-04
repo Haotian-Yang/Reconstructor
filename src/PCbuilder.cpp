@@ -38,6 +38,6 @@ void PCbuilder::savePCDfile(const std::string &savePath){
 }
 
 
-string PCbuilder::getSavePath(){
+string PCbuilder::getSavePath() const{
     return savePath;
 }
