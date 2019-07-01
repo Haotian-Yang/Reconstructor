@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-Mat dataloader::depthLoader(const string& filepath){
+Mat dataloader::depthLoader(string_view filepath){
     Mat depth;
     FileStorage depth_fs;
 
@@ -19,7 +19,7 @@ Mat dataloader::depthLoader(const string& filepath){
     return depth;
 }
 
-Mat dataloader::imgLoader(const string &filepath){
+Mat dataloader::imgLoader(string_view filepath){
     Mat img;
     img = imread(filepath, IMREAD_COLOR);
 
@@ -29,4 +29,14 @@ Mat dataloader::imgLoader(const string &filepath){
     cout << "Image size: " << img.size << endl;
 
     return img;
+}
+
+
+Mat dataloader::coorLoader(string_view filepath){
+    Mat coordinates;
+    coordinates = imread(filepath, -1);
+    // Output properties
+    cout << "-- Coordinates file has been loaded --\n" << endl;
+    cout << "Coordinates type: " << coordinates.type() << endl;
+    cout << "Coordinates size: " << coordinates.size << endl;
 }
