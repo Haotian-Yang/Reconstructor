@@ -7,7 +7,7 @@ using namespace std;
 
 int main(int argc, char* argv[]){
     if (argc != 3){
-        cout << "please input ./<executable> <dataset_path> <pcd_save_path>" << endl;
+        cerr << "please input ./<executable> <dataset_path> <pcd_save_path>" << endl;
     }
 
     string dataset_path = argv[1];
@@ -32,6 +32,7 @@ int main(int argc, char* argv[]){
                     string depth_path = dataset_path + t + d + s + "depthMap.xml";
                     cout << img_path << endl;
                     dataloader DL(depth_path, img_path);
+                    cout << DL.depth.type() << endl;
 
                     //step 2: pcd file saved
                     PCbuilder PCDsaver(DL.img, DL.depth);

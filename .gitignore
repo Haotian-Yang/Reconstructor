@@ -1,5 +1,6 @@
 /data
 /bin
 /build
+/demo
 *.autosaver
 *.user

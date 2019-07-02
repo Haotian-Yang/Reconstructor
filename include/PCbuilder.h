@@ -1,3 +1,6 @@
+/* @Author: eikoloki data:07/02/2019
+ */
+
 #ifndef PCBUILDER_H
 #define PCBUILDER_H
 
@@ -15,11 +18,17 @@ private:
     std::string savePath;
 
 public:
+    /*
+     * build point cloud from 3 channel depth
+     * input: RGB image, depth map
+     */
     PCbuilder(cv::Mat image, cv::Mat depth){
         cloud = buildPointCloud(image, depth);
     }
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr buildPointCloud(const cv::Mat &image,  const cv::Mat &depth);
+
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr buildPointCloud(const cv::Mat &image, const cv::Mat &depth);
+
     void savePCDfile(const std::string& savePath);
     std::string getSavePath() const;
 

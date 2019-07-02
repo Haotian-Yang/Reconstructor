@@ -1,9 +1,12 @@
+/*@Author: eikoloki date: 06/30/2019
+ */
+
 #include <dataloader.h>
 
 using namespace cv;
 using namespace std;
 
-Mat dataloader::depthLoader(string_view filepath){
+Mat dataloader::xml_depthLoader(const string& filepath){
     Mat depth;
     FileStorage depth_fs;
 
@@ -12,19 +15,19 @@ Mat dataloader::depthLoader(string_view filepath){
     depth_fs.release();
 
     // Ouput properties
-    cout << "-- Depth file has been loaded --\n" << endl;
-    cout << "Depth Mat type:" << depth.type() << endl;
-    cout << "Depth Mat size:" << depth.size << endl;
+    cout << "-- XML file has been loaded --" << endl;
+    cout << "XML Mat type:" << depth.type() << endl;
+    cout << "XML Mat size:" << depth.size << endl;
 
     return depth;
 }
 
-Mat dataloader::imgLoader(string_view filepath){
+Mat dataloader::imgLoader(const string& filepath){
     Mat img;
     img = imread(filepath, IMREAD_COLOR);
 
     // Output properties
-    cout << "-- Image has been loaded --\n" << endl;
+    cout << "-- Image has been loaded --" << endl;
     cout << "Image type: " << img.type()  << endl;
     cout << "Image size: " << img.size << endl;
 
@@ -32,11 +35,13 @@ Mat dataloader::imgLoader(string_view filepath){
 }
 
 
-Mat dataloader::coorLoader(string_view filepath){
-    Mat coordinates;
-    coordinates = imread(filepath, -1);
+Mat dataloader::tiff_depthLoader(const string& filepath){
+    Mat depth;
+    depth = imread(filepath, IMREAD_UNCHANGED);
     // Output properties
-    cout << "-- Coordinates file has been loaded --\n" << endl;
-    cout << "Coordinates type: " << coordinates.type() << endl;
-    cout << "Coordinates size: " << coordinates.size << endl;
+    cout << "-- TIFF file has been loaded --" << endl;
+    cout << "TIFF type: " << depth.type() << endl;
+    cout << "TIFF size: " << depth.size << endl;
+    cout << "TIFF channels: " << depth.channels() << endl;
+    return depth;
 }
