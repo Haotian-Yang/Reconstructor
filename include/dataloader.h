@@ -19,21 +19,23 @@ private:
     std::string imgPath;
 
 public:
+    dataloader(){
+        ;
+    }
+
+
     dataloader(std::string depthFile, std::string imgFile):depthPath(depthFile), imgPath(imgFile)
     {
 
         if (depthFile.substr(depthFile.find_last_of('.') + 1) == "xml"){
-            depth = xml_depthLoader(depthFile);
+            depth = xml_pointsLoader(depthFile);
         }
         else if(depthFile.substr(depthFile.find_last_of('.') + 1) == "tiff"){
-            depth = tiff_depthLoader(depthFile);
+            depth = tiff_pointsLoader(depthFile);
         }
         img = imgLoader (imgFile);
     }
 
-private:
-    cv::Mat xml_depthLoader(const std::string& filepath);
-    cv::Mat imgLoader(const std::string& filepath);
 
     /*
      * coorLoader: load a tiff file which contents 3 channels data representing [x, y, z]
@@ -41,7 +43,10 @@ private:
      * input: std::string of tiff file path.
      * output: CV_64FC3 Mat.
      */
-    cv::Mat tiff_depthLoader(const std::string &filepath);
+    cv::Mat tiff_pointsLoader(const std::string &filepath);
+    cv::Mat xml_pointsLoader(const std::string& filepath);
+    cv::Mat imgLoader(const std::string& filepath);
+
 };
 
 #endif

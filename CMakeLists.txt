@@ -20,4 +20,4 @@ LINK_LIBRARIES( ${PCL_LIBRARY_DIRS} )
 SET( THIRD_PARTY_LIBRARIES ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 add_subdirectory(./src/)
-
+add_subdirectory(./examples/)

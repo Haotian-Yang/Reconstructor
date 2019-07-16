@@ -6,7 +6,7 @@
 using namespace cv;
 using namespace std;
 
-Mat dataloader::xml_depthLoader(const string& filepath){
+Mat dataloader::xml_pointsLoader(const string& filepath){
     Mat depth;
     FileStorage depth_fs;
 
@@ -35,7 +35,7 @@ Mat dataloader::imgLoader(const string& filepath){
 }
 
 
-Mat dataloader::tiff_depthLoader(const string& filepath){
+Mat dataloader::tiff_pointsLoader(const string& filepath){
     Mat depth;
     depth = imread(filepath, IMREAD_UNCHANGED);
     // Output properties
