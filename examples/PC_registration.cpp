@@ -1,6 +1,22 @@
 #include <iostream>
+#include <PCbuilder.h>
+#include <dataloader.h>
 #include <registrator.h>
 #include <pcl/visualization/pcl_visualizer.h>
+
+
+PointCloud::Ptr loadTiffPC(const std::string tiffFile){
+    dataloader dl;
+    PCbuilder PCB;
+    cv::Mat PC_mat;
+    PC_mat = dl.tiff_pointsLoader(tiffFile);
+    PointCloud::Ptr PC(new PointCloud);
+    PC = PCB.buildPointCloud(PC_mat);
+
+    std::cout << "--point cloud successfully loaded--" << std::endl;
+    return PC;
+}
+
 
 int main(int argc, char** argv){
     if(argc != 3){
@@ -19,8 +35,8 @@ int main(int argc, char** argv){
 
 
 
-    cloud_src = reg.loadTiffPC(source_pc_file);
-    cloud_tgt = reg.loadTiffPC(target_pc_file);
+    cloud_src = loadTiffPC(source_pc_file);
+    cloud_tgt = loadTiffPC(target_pc_file);
 
     reg.setRegPointCloudPair(cloud_tgt, cloud_src);
 
@@ -28,8 +44,11 @@ int main(int argc, char** argv){
 
     PointCloud::Ptr output(new PointCloud);
     Eigen::Matrix4f trans;
-    reg.pairAlign(output, trans, true);
 
+    auto start = cv::getTickCount();
+    reg.pairAlign(50.0, 0.6, 30, output, trans, true);
+    auto end = cv::getTickCount();
+    std::cout << "elapsed time:" <<  1000 * (end - start) /cv::getTickFrequency() << std::endl;
     std::cout<< trans << std::endl;
     return 0;
 

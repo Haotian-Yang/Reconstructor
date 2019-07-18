@@ -7,12 +7,12 @@ using namespace std;
 
 int main(int argc, char* argv[]){
     if (argc != 3){
-        cerr << "please input ./<executable> <dataset_path> <pcd_save_path>" << endl;
+        cerr << "please input ./<executable> <rgb_file> <depth_file> <pcd_save_path>" << endl;
     }
 
     string dataset_path = argv[1];
     string save_path = argv[2];
-
+    /*
     cout << "dataset path:" << dataset_path << endl;
     cout << "save path:" << save_path<< endl;
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
             }
         }
     }
-
+    */
 
     return 0;
 }

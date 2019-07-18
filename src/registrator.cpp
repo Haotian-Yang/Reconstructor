@@ -1,24 +1,12 @@
 #include <registrator.h>
 
 
-PointCloud::Ptr Registrator::loadTiffPC(const std::string tiffFile){
-    dataloader dl;
-    PCbuilder PCB;
-    cv::Mat PC_mat;
-    PC_mat = dl.tiff_pointsLoader(tiffFile);
-    PointCloud::Ptr PC(new PointCloud);
-    PC = PCB.buildPointCloud(PC_mat);
-
-    std::cout << "--point cloud successfully loaded--" << std::endl;
-    return PC;
-}
-
 void Registrator::setRegPointCloudPair(PointCloud::Ptr &target, PointCloud::Ptr &source){
     cloud_tgt = target;
     cloud_src = source;
 }
 
-void Registrator::pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample){
+void Registrator::pairAlign(float maxCorrespondence, float reduction, int iteration, PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample, int leafSize){
 
     PointCloud::Ptr src(new PointCloud);
     PointCloud::Ptr tgt(new PointCloud);
@@ -26,7 +14,7 @@ void Registrator::pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_trans
     // filter the original point cloud with downsampling to boost computational speed
     pcl::VoxelGrid<PointT> grid;
     if (downsample){
-        grid.setLeafSize(1,1,1);
+        grid.setLeafSize(leafSize, leafSize, leafSize);
         grid.setInputCloud(cloud_src);
         grid.filter(*src);
 
@@ -64,9 +52,9 @@ void Registrator::pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_trans
 
     // Align
     pcl::IterativeClosestPointNonLinear<PointNormalT, PointNormalT> reg;
-    reg.setTransformationEpsilon(1e-6);
+    reg.setTransformationEpsilon(1e-4);
     // set the maximum distance between two correspondences (src<->tgt) to 50mm
-    reg.setMaxCorrespondenceDistance(50);
+    reg.setMaxCorrespondenceDistance(maxCorrespondence);
     reg.setPointRepresentation(boost::make_shared<const PointCurvature> (point_representation));
     reg.setInputSource(points_with_normals_src);
     reg.setInputTarget(points_with_normals_tgt);
@@ -77,7 +65,7 @@ void Registrator::pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_trans
     PointCloudWithNormals::Ptr reg_result = points_with_normals_src;
     reg.setMaximumIterations(2);
 
-    for (int i =0 ; i < 20 ; i++){
+    for (int i =0 ; i < iteration ; i++){
         PCL_INFO("Iteration: %d.\n", i+1);
 
         // save for visualization
@@ -90,8 +78,10 @@ void Registrator::pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_trans
         //if the difference between this transformation and     the previous one
         //is smaller than the threshold, refine the process by reducing
         //the maximal correspondence distance
-        if (fabs((reg.getLastIncrementalTransformation() - prev).sum()) < reg.getTransformationEpsilon())
-            reg.setMaxCorrespondenceDistance(reg.getMaxCorrespondenceDistance() - 7);
+        if (fabs((reg.getLastIncrementalTransformation() - prev).sum()) < reg.getTransformationEpsilon()){
+            reg.setMaxCorrespondenceDistance(reg.getMaxCorrespondenceDistance() * reduction);
+            std::cout << reg.getMaxCorrespondenceDistance() << std::endl;
+        }
 
         prev = reg.getLastIncrementalTransformation();
         if(visual){
@@ -101,6 +91,7 @@ void Registrator::pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_trans
 
 
     if(visual){
+        std::cout << "press q to continue" << std::endl;
         p->spin();
     }
     // transformation from target to src

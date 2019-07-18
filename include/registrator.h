@@ -18,9 +18,6 @@
 
 #include <pcl/visualization/pcl_visualizer.h>
 
-#include <dataloader.h>
-#include <PCbuilder.h>
-
 typedef pcl::PointXYZ PointT;
 typedef pcl::PointCloud<PointT> PointCloud;
 typedef pcl::PointNormal PointNormalT;
@@ -67,10 +64,7 @@ public:
     void showCloudResult(const PointCloudWithNormals::Ptr cloud_src, const PointCloudWithNormals::Ptr cloud_tgt);
 
     void setRegPointCloudPair(PointCloud::Ptr &target, PointCloud::Ptr &source);
-
-    PointCloud::Ptr loadTiffPC(const std::string tiffFile);
-
-    void pairAlign(PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample = false);
+    void pairAlign(float maxCorrespondence, float reduction, int iteration, PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample = false, int leafSize = 5);
 
 
 
