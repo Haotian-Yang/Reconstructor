@@ -6,12 +6,17 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-    if (argc != 3){
+    if (argc != 4){
         cerr << "please input ./<executable> <rgb_file> <depth_file> <pcd_save_path>" << endl;
     }
 
-    string dataset_path = argv[1];
-    string save_path = argv[2];
+    string img_path = argv[1];
+    string depth_path = argv[2];
+    string save_path = argv[3];
+
+    dataloader DL(depth_path, img_path);
+    PCbuilder PCB(DL.img, DL.depth);
+    PCB.savePCDfile(save_path);
     /*
     cout << "dataset path:" << dataset_path << endl;
     cout << "save path:" << save_path<< endl;

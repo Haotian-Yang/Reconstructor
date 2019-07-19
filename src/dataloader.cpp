@@ -6,12 +6,12 @@
 using namespace cv;
 using namespace std;
 
-Mat dataloader::xml_pointsLoader(const string& filepath){
+Mat dataloader::xml_pointsLoader(const string& filepath, const string& key){
     Mat depth;
     FileStorage depth_fs;
 
     depth_fs.open(filepath, FileStorage::READ);
-    depth_fs["DepthMap"] >> depth;
+    depth_fs[key] >> depth;
     depth_fs.release();
 
     // Ouput properties

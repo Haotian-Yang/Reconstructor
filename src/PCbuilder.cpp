@@ -8,7 +8,7 @@ using namespace cv;
 using namespace pcl;
 
 
-PointCloud<PointXYZRGB>::Ptr PCbuilder::buildPointCloud(const Mat &image, const Mat &PC_mat){
+PointCloud<PointXYZRGB>::Ptr PCbuilder::buildPointCloud(const cv::Mat &image, const cv::Mat &PC_mat, DepthFileType depthType){
 
     PointCloud<PointXYZRGB>::Ptr PC(new PointCloud<PointXYZRGB>);
     cout << "img rows:" << image.rows << " PC rows:" << PC_mat.rows << endl;
@@ -16,27 +16,40 @@ PointCloud<PointXYZRGB>::Ptr PCbuilder::buildPointCloud(const Mat &image, const 
         for (int c = 0; c < image.cols; c++){
             PointXYZRGB p;
             if (PC_mat.type() == CV_32FC3){
-                p.x = PC_mat.ptr<float>(r)[3*c];
-                p.y = PC_mat.ptr<float>(r)[3*c + 1];
-                p.z = PC_mat.ptr<float>(r)[3*c + 2];
+                if(depthType == DepthFileType::DEPTHTYPE_XML || depthType == DepthFileType::DEPTHTYPE_EXT){
+                    p.x = PC_mat.ptr<float>(r)[3*c];
+                    p.y = PC_mat.ptr<float>(r)[3*c + 1];
+                    p.z = PC_mat.ptr<float>(r)[3*c + 2];
+                }
+                else if(depthType == DepthFileType::DEPTHTYPE_TIFF){
+                    p.z = PC_mat.ptr<float>(r)[3*c];
+                    p.y = PC_mat.ptr<float>(r)[3*c + 1];
+                    p.x = PC_mat.ptr<float>(r)[3*c + 2];
+                }
+
                 if (p.x > 200 || p.x < -200){
-                    cout << "x: " <<p.x << endl;
+                    //cout << "x: " <<p.x << endl;
                     p.x = 0.0;
                 }
                 if (p.y > 200  || p.y < -200){
-                    cout << "y: " << p.y << endl;
+                    //cout << "y: " << p.y << endl;
                     p.y = 0.0;
                 }
                 if (p.z > 200 || p.z < -200){
-                    cout << "z: " << p.z << endl;
+                    //cout << "z: " << p.z << endl;
                     p.z = 0.0;
                 }
 
             }
             else {
-                p.x = PC_mat.ptr<float>(c + r * image.cols)[0];
-                p.y = PC_mat.ptr<float>(c + r * image.cols)[1];
-                p.z = PC_mat.ptr<float>(c + r * image.cols)[2];
+                if(depthType == DepthFileType::DEPTHTYPE_XML || depthType == DepthFileType::DEPTHTYPE_EXT){
+                p.y = PC_mat.ptr<float>(c + r * PC_mat.cols)[0];
+                p.x = PC_mat.ptr<float>(c + r * PC_mat.cols)[1];
+                p.z = PC_mat.ptr<float>(c + r * PC_mat.cols)[2];
+                }
+                else{
+                    std::cerr << "no matching type of depth file, plz check your depth file type" << std::endl;
+                }
             }
 
 
@@ -56,15 +69,22 @@ PointCloud<PointXYZRGB>::Ptr PCbuilder::buildPointCloud(const Mat &image, const 
 
 
 
-PointCloud<PointXYZ>::Ptr PCbuilder::buildPointCloud(const Mat &PC_mat){
+PointCloud<PointXYZ>::Ptr PCbuilder::buildPointCloud(const Mat &PC_mat, DepthFileType depthType){
     PointCloud<PointXYZ>::Ptr PC(new PointCloud<PointXYZ>);
     for (int r = 0; r < PC_mat.rows; r++){
         for (int c = 0; c < PC_mat.cols; c++){
             PointXYZ p;
             if (PC_mat.type() == CV_32FC3){
-                p.x = PC_mat.ptr<float>(r)[3*c];
-                p.y = PC_mat.ptr<float>(r)[3*c + 1];
-                p.z = PC_mat.ptr<float>(r)[3*c + 2];
+                if(depthType == DepthFileType::DEPTHTYPE_XML || depthType == DepthFileType::DEPTHTYPE_EXT){
+                    p.x = PC_mat.ptr<float>(r)[3*c];
+                    p.y = PC_mat.ptr<float>(r)[3*c + 1];
+                    p.z = PC_mat.ptr<float>(r)[3*c + 2];
+                }
+                else if(depthType == DepthFileType::DEPTHTYPE_TIFF){
+                    p.z = PC_mat.ptr<float>(r)[3*c];
+                    p.y = PC_mat.ptr<float>(r)[3*c + 1];
+                    p.x = PC_mat.ptr<float>(r)[3*c + 2];
+                }
                 if (p.x > 200 || p.x < -200){
                     //cout << "x: " <<p.x << endl;
                     p.x = 0.0;
@@ -80,9 +100,14 @@ PointCloud<PointXYZ>::Ptr PCbuilder::buildPointCloud(const Mat &PC_mat){
 
             }
             else {
-                p.x = PC_mat.ptr<float>(c + r * PC_mat.cols)[0];
-                p.y = PC_mat.ptr<float>(c + r * PC_mat.cols)[1];
+                if(depthType == DepthFileType::DEPTHTYPE_XML || depthType == DepthFileType::DEPTHTYPE_EXT){
+                p.y = PC_mat.ptr<float>(c + r * PC_mat.cols)[0];
+                p.x = PC_mat.ptr<float>(c + r * PC_mat.cols)[1];
                 p.z = PC_mat.ptr<float>(c + r * PC_mat.cols)[2];
+                }
+                else{
+                    std::cerr << "no matching type of depth file, plz check your depth file type" << std::endl;
+                }
             }
 
             PC->points.push_back(p);

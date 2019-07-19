@@ -17,6 +17,7 @@ public:
 private:
     std::string depthPath;
     std::string imgPath;
+    std::string keyword;
 
 public:
     dataloader(){
@@ -24,11 +25,11 @@ public:
     }
 
 
-    dataloader(std::string depthFile, std::string imgFile):depthPath(depthFile), imgPath(imgFile)
+    dataloader(std::string depthFile, std::string imgFile, std::string depthKeyword = "cloud"):depthPath(depthFile), imgPath(imgFile), keyword(depthKeyword)
     {
 
-        if (depthFile.substr(depthFile.find_last_of('.') + 1) == "xml"){
-            depth = xml_pointsLoader(depthFile);
+        if (depthFile.substr(depthFile.find_last_of('.') + 1) == "xml" || depthFile.substr(depthFile.find_last_of('.') + 1) == "ext"){
+            depth = xml_pointsLoader(depthFile, depthKeyword);
         }
         else if(depthFile.substr(depthFile.find_last_of('.') + 1) == "tiff"){
             depth = tiff_pointsLoader(depthFile);
@@ -44,7 +45,7 @@ public:
      * output: CV_64FC3 Mat.
      */
     cv::Mat tiff_pointsLoader(const std::string &filepath);
-    cv::Mat xml_pointsLoader(const std::string& filepath);
+    cv::Mat xml_pointsLoader(const std::string& filepath, const std::string& key);
     cv::Mat imgLoader(const std::string& filepath);
 
 };
