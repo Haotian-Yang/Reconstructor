@@ -63,8 +63,8 @@ public:
     void showCloudOriginal(const PointCloud::Ptr cloud_src, const PointCloud::Ptr cloud_tgt);
     void showCloudResult(const PointCloudWithNormals::Ptr cloud_src, const PointCloudWithNormals::Ptr cloud_tgt);
 
-    void setRegPointCloudPair(PointCloud::Ptr &target, PointCloud::Ptr &source);
-    void pairAlign(float maxCorrespondence, float reduction, int iteration, PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample = false, int leafSize = 5);
+    void setRegPointCloudPair(PointCloud::Ptr &source, PointCloud::Ptr &target);
+    float pairAlign(float maxCorrespondence, float reduction, int iteration, PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample = false, int leafSize = 5);
 
 
 

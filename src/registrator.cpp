@@ -1,12 +1,12 @@
 #include <registrator.h>
 
 
-void Registrator::setRegPointCloudPair(PointCloud::Ptr &target, PointCloud::Ptr &source){
+void Registrator::setRegPointCloudPair(PointCloud::Ptr &source, PointCloud::Ptr &target){
     cloud_tgt = target;
     cloud_src = source;
 }
 
-void Registrator::pairAlign(float maxCorrespondence, float reduction, int iteration, PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample, int leafSize){
+float Registrator::pairAlign(float maxCorrespondence, float reduction, int iteration, PointCloud::Ptr output, Eigen::Matrix4f &final_transform, bool downsample, int leafSize){
 
     PointCloud::Ptr src(new PointCloud);
     PointCloud::Ptr tgt(new PointCloud);
@@ -75,7 +75,7 @@ void Registrator::pairAlign(float maxCorrespondence, float reduction, int iterat
         reg.align(*reg_result);
 
         Ti = reg.getFinalTransformation() * Ti;
-        //if the difference between this transformation and     the previous one
+        //if the difference between this transformation and the previous one
         //is smaller than the threshold, refine the process by reducing
         //the maximal correspondence distance
         if (fabs((reg.getLastIncrementalTransformation() - prev).sum()) < reg.getTransformationEpsilon()){
@@ -87,6 +87,8 @@ void Registrator::pairAlign(float maxCorrespondence, float reduction, int iterat
         if(visual){
             showCloudResult(points_with_normals_src, points_with_normals_tgt);
         }
+
+
     }
 
 
@@ -96,6 +98,7 @@ void Registrator::pairAlign(float maxCorrespondence, float reduction, int iterat
     }
     // transformation from target to src
     T_st = Ti;
+    float CorrDis = reg.getMaxCorrespondenceDistance();
 
     // transform source back to target
     pcl::transformPointCloud(*cloud_src, *output, T_st);
@@ -103,6 +106,8 @@ void Registrator::pairAlign(float maxCorrespondence, float reduction, int iterat
 
     final_transform = T_st;
     transformation = T_st;
+
+    return CorrDis;
 }
 
 
