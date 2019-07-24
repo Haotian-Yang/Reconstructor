@@ -7,3 +7,7 @@ TARGET_LINK_LIBRARIES(PC_from_tiff Reconstructor)
 
 ADD_EXECUTABLE(PC_registration PC_registration.cpp)
 TARGET_LINK_LIBRARIES(PC_registration Reconstructor)
+
+
+ADD_EXECUTABLE(PC_view_transfer PC_view_transfer.cpp)
+TARGET_LINK_LIBRARIES(PC_view_transfer Reconstructor)
