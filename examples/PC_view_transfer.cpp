@@ -4,6 +4,11 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <opencv2/core/eigen.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/core/utility.hpp>
+#include <opencv2/core/persistence.hpp>
+
+
 
 #include <iostream>
 #include <string_view>
@@ -60,9 +65,9 @@ PointCloud::Ptr loadExtPC(const std::string extFile, const std::string keyword){
 }
 
 cv::Mat loadExtTransMat(std::string_view extFile, std::string_view keyword){
-    cv::FileStorage fs(extFile, cv::FileStorage::READ);
+    cv::FileStorage fs(std::string(extFile).c_str(), cv::FileStorage::READ);
     cv::Mat trans;
-    trans << fs[keyword];
+    fs[std::string(keyword).data()] >> trans ;
     return trans;
 
 }
@@ -87,7 +92,7 @@ int main(int argc, char** argv){
 
     // step 3: load transformation matrix between these two clouds, EXT file
     cv::Mat trans_mat;
-    trans_mat = loadExtTransMat(trans_mat_path, "transformation")
+    trans_mat = loadExtTransMat(trans_mat_path, "transformation");
     // step 4: visulize the original ground truth with color along side with the transformed
     //         cloud with color
 

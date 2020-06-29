@@ -67,9 +67,11 @@ int main(int argc, char** argv){
 //        return -1;
 //    }
 
-    std::string rootpath = "/media/xiran_zhang/TOSHIBA EXT/MICCAI_SCARED/dataset1";
+    //std::string rootpath = "/media/xiran_zhang/TOSHIBA EXT/MICCAI_SCARED/dataset1";
+    std::string rootpath; 
+    rootpath = "/media/10TB/EndoVis_depth/dataset_2";
 
-    std::array<std::string, 3> keyframe= {"/keyframe_3"};
+    std::array<std::string, 3> keyframe= {"/keyframe_2"};
 
     for(auto k : keyframe){
 
@@ -78,9 +80,10 @@ int main(int argc, char** argv){
         // this should be a ext(xml) file
         std::string target_pc_path = rootpath + k + data + "/scene_points_sgm";
         // this should be a tiff file
-        std::string source_pc_path = rootpath + k + data + "/scene_points";
+        std::string source_pc_path = rootpath + k + data + "/Points";
         // registration data
         std::string registration_path = rootpath + k + data + "/registration_data";
+        mkdir(registration_path.c_str(),0777);
         std::string log_file = rootpath + k + data + "/log.ext";
 
         Registrator reg;
